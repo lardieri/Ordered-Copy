@@ -1,4 +1,5 @@
 {
+  "organization": "Stephen Lardieri",
   "default-configuration": "Release",
   "configurations": [
     "Debug",
