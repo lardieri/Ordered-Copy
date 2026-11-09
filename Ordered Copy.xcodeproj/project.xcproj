@@ -11,6 +11,15 @@
       "Base",
     ],
   },
+  "packages": [
+    {
+      "kind": "remote",
+      "repository": "https://github.com/chicio/ID3TagEditor.git",
+      "version": {
+        "up-to-next-major-version": "5.5.0",
+      },
+    },
+  ],
   "files": [
     { "kind": "folder", "path": "src", "target-membership": [ "ocp" ] },
     {
@@ -30,6 +39,13 @@
       "build-phases": [
         "compile-sources",
         "frameworks",
+      ],
+      "package-product-members": [
+        {
+          "package": "ID3TagEditor",
+          "product-name": "ID3TagEditor",
+          "build-phase": { "build-phase": "frameworks" },
+        },
       ],
       "build-settings": {
         "PRODUCT_NAME": "$(TARGET_NAME)",
