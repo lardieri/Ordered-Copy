@@ -21,6 +21,7 @@
     },
   ],
   "files": [
+    { "kind": "folder", "path": "docs", "target-membership": [ "ocp" ] },
     { "kind": "folder", "path": "src", "target-membership": [ "ocp" ] },
     {
       "kind": "group",
