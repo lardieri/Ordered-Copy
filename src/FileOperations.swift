@@ -167,3 +167,60 @@ extension FileOperations {
 extension FileOperations.Filter {
     static let `default` = Self.include(extensions: ["mp3"])
 }
+
+// MARK: - Alternate scanner
+
+extension FileOperations {
+    func enumerate(directory: URL, filter: Filter) -> DirectoryContents? {
+        let includeHidden = if case .all(let includeHidden) = filter { includeHidden } else { false }
+        let options: FileManager.DirectoryEnumerationOptions = if includeHidden {
+            [.skipsPackageDescendants, .includesDirectoriesPostOrder]
+        } else {
+            [.skipsPackageDescendants, .includesDirectoriesPostOrder, .skipsHiddenFiles]
+        }
+
+        let enumerator = fileManager.enumerator(
+            at: directory,
+            includingPropertiesForKeys: Array(keys),
+            options: options)!
+
+        let path = directory.absoluteURL.path(percentEncoded: false)
+        var contentsStack = [DirectoryContents(path: path)]
+
+        for case let url as URL in enumerator {
+            guard let resourceValues = try? url.resourceValues(forKeys: keys) else {
+                continue
+            }
+
+            let isDirectory = resourceValues.isDirectory!
+
+            if isDirectory {
+                // Subdirectory, not file.
+                let reachedEndOfDirectory = isDirectory && enumerator.isEnumeratingDirectoryPostOrder
+
+                if reachedEndOfDirectory {
+                    // Finished a subdirectory.
+                    let subdirectoryContents = contentsStack.removeLast()
+                    if recursive {
+                        contentsStack.last!.add(subdirectory: url, contents: subdirectoryContents)
+                    }
+                } else {
+                    // Starting a new subdirectory.
+                    let path = url.absoluteURL.path(percentEncoded: false)
+                    contentsStack.append(DirectoryContents(path: path))
+                }
+            } else {
+                // File, not subdirectory.
+                if "mp3".caseInsensitiveCompare(url.pathExtension) == .orderedSame,
+                   let tagInfo = TagInfo.getTagInfo(for: url) {
+                    contentsStack.last!.add(mp3: url, tagInfo: tagInfo)
+                } else {
+                    contentsStack.last!.add(other: url)
+                }
+            }
+        }
+
+        assert(contentsStack.count == 1)
+        return contentsStack.first!
+    }
+}
