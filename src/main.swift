@@ -17,7 +17,7 @@ fileprivate let sourcePath = "/Users/foo/Music"
 print("Scanning \(sourcePath)")
 
 fileprivate let fileOperations = FileOperations(recursive: recursive, singleThreaded: singleThreaded)
-fileprivate let sourceURL = URL(fileURLWithPath: sourcePath)
+fileprivate let sourceURL = URL(fileURLWithPath: sourcePath).adjusted
 
 fileprivate let startTime = ContinuousClock.now
 
@@ -45,4 +45,22 @@ print("Scanning duration: \(duration)")
 fileprivate func fail(_ message: String) -> Never {
     print(message, to: &stderr)
     exit(EXIT_FAILURE)
+}
+
+fileprivate extension URL {
+    var adjusted: URL {
+        var adjusted = self
+
+        adjusted = adjusted.standardizedFileURL
+        adjusted = adjusted.resolvingSymlinksInPath()
+        adjusted = adjusted.absoluteURL
+
+        let originalPath = self.path(percentEncoded: false)
+        let adjustedPath = adjusted.path(percentEncoded: false)
+        if originalPath.caseInsensitiveCompare(adjustedPath) != .orderedSame {
+            print("Adjusted\n\t\(originalPath)\nto\n\t\(adjustedPath)")
+        }
+
+        return adjusted
+    }
 }
