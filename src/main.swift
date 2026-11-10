@@ -30,8 +30,7 @@ fileprivate let endTime = ContinuousClock.now
 fileprivate let duration = endTime - startTime
 
 guard let directoryContents else {
-    print("Failed!")
-    exit(EXIT_FAILURE)
+    fail("Failed to read source directory contents.")
 }
 
 directoryContents.sort(criteria: criteria)
@@ -39,5 +38,11 @@ directoryContents.sort(criteria: criteria)
 // TODO: Copy the files. For right now, just print them.
 fileprivate let description = directoryContents.description
 print(description)
-
 print("Scanning duration: \(duration)")
+
+// MARK: - Helpers
+
+fileprivate func fail(_ message: String) -> Never {
+    print(message, to: &stderr)
+    exit(EXIT_FAILURE)
+}

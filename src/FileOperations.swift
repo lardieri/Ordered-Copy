@@ -13,13 +13,8 @@ class FileOperations {
         self.singleThreaded = singleThreaded
     }
 
-    func getDirectoryContents(of directory: URL, filter: Filter) -> DirectoryContents? {
-        if let currentQueue = OperationQueue.current,
-           let name = currentQueue.name {
-            assert(!name.hasPrefix(String(describing: Self.self)), "\(String(describing: Self.self)) called public method recursively!")
-        }
-
-        let path = directory.absoluteURL.path(percentEncoded: false)
+    func validate(directory: URL) -> Bool {
+        let path = directory.path(percentEncoded: false)
 
         do {
             let resourceValues = try directory.resourceValues(forKeys: keys)
@@ -30,16 +25,30 @@ class FileOperations {
             let isExecutable = resourceValues.isExecutable!
 
             guard isDirectory && !isPackage && isReadable && isExecutable else {
-                print("\(path): not a readable directory")
-                return nil
+                print("Error: \(path) is not a readable directory.")
+                return false
             }
         } catch {
             let errorMessage = error.localizedDescription
             print("Error reading \(path): \(errorMessage)")
+            return false
+        }
+
+        return true
+    }
+
+    func getDirectoryContents(of directory: URL, filter: Filter) -> DirectoryContents? {
+        if let currentQueue = OperationQueue.current,
+           let name = currentQueue.name {
+            assert(!name.hasPrefix(String(describing: Self.self)), "\(String(describing: Self.self)) called public method recursively!")
+        }
+
+        guard validate(directory: directory) else {
             return nil
         }
 
         let queue = OperationQueue()
+        let path = directory.path(percentEncoded: false)
         queue.name = "\(String(describing: Self.self)) reading \(path)"
         queue.qualityOfService = .utility
         queue.maxConcurrentOperationCount = singleThreaded ? 1 : OperationQueue.defaultMaxConcurrentOperationCount
@@ -89,15 +98,7 @@ class FileOperations {
     }
 
     private func add(subdirectory: URL, to directoryContents: DirectoryContents, filter: Filter, on queue: OperationQueue) {
-        let resourceValues = try! subdirectory.resourceValues(forKeys: keys)
-
-        let isPackage = resourceValues.isPackage!
-        let isReadable = resourceValues.isReadable!
-        let isExecutable = resourceValues.isExecutable!
-
-        guard !isPackage && isReadable && isExecutable else {
-            let path = subdirectory.absoluteURL.path(percentEncoded: false)
-            print("\(path): not a readable directory")
+        guard validate(directory: subdirectory) else {
             return
         }
 
@@ -120,7 +121,7 @@ class FileOperations {
 
         guard isRegularFile && isReadable else {
             let path = file.absoluteURL.path(percentEncoded: false)
-            print("\(path): not a readable file")
+            print("Error: \(path) is not a readable file.")
             return
         }
 
