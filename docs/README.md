@@ -103,3 +103,5 @@ Sorting by filename is naïve with respect to numbers. 10 comes before 2, for ex
 ## Credits
 
 chicio’s **ID3TagEditor:** [https://github.com/chicio/ID3TagEditor](https://github.com/chicio/ID3TagEditor)
+
+DivineDominion’s **FileExistence:** [https://christiantietze.de/posts/2017/01/file-existence-swift/](https://christiantietze.de/posts/2017/01/file-existence-swift/)
