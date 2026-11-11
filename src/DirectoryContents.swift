@@ -188,6 +188,7 @@ extension DirectoryContents.MP3SortCriteria {
 
 extension DirectoryContents {
     protocol ContentItem {
+        var url: URL { get }
         var name: String { get }
     }
 

@@ -12,14 +12,18 @@ fileprivate let singleThreaded = false
 fileprivate let recursive = true
 fileprivate let filter = FileOperations.Filter.default
 fileprivate let criteria = DirectoryContents.MP3SortCriteria.default
-fileprivate let sourcePath = "/Users/foo/Music"
+fileprivate let sourcePath = "~/Music"
+fileprivate let destinationPath = "~/Music-copy"
 
-print("Scanning \(sourcePath)")
+fileprivate let sourceURL = URL(fileURLWithPath: sourcePath).adjusted
+fileprivate let destinationURL = URL(filePath: destinationPath, directoryHint: .isDirectory).adjusted
+// TODO: When and how can .adjusted fail for a dir that doesn't exist yet?
 
 fileprivate let fileOperations = FileOperations(recursive: recursive, singleThreaded: singleThreaded)
-fileprivate let sourceURL = URL(fileURLWithPath: sourcePath).adjusted
 
 fileprivate let startTime = ContinuousClock.now
+
+print("Scanning \(sourceURL.path(percentEncoded: false))")
 
 // Apple developer forums say this is supposed to be faster for recursive scanning. It isn’t.
 //     fileprivate let directoryContents = fileOperations.enumerate(directory: sourceURL, filter: filter)
@@ -35,10 +39,9 @@ guard let directoryContents else {
 
 directoryContents.sort(criteria: criteria)
 
-// TODO: Copy the files. For right now, just print them.
-fileprivate let description = directoryContents.description
-print(description)
 print("Scanning duration: \(duration)")
+
+fileOperations.copyDirectory(directoryContents: directoryContents, to: destinationURL)
 
 // MARK: - Helpers
 
