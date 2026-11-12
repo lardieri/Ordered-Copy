@@ -105,3 +105,5 @@ Sorting by filename is naïve with respect to numbers. 10 comes before 2, for ex
 chicio’s **ID3TagEditor:** [https://github.com/chicio/ID3TagEditor](https://github.com/chicio/ID3TagEditor)
 
 DivineDominion’s **FileExistence:** [https://christiantietze.de/posts/2017/01/file-existence-swift/](https://christiantietze.de/posts/2017/01/file-existence-swift/)
+
+Apple’s **Swift Argument Parser:** [https://github.com/apple/swift-argument-parser](https://github.com/apple/swift-argument-parser)

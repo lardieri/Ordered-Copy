@@ -9,10 +9,10 @@ import Foundation
 import ID3TagEditor
 
 struct TagInfo {
-    let track: Int?
-    let title: String?
     let album: String?
     let artist: String?
+    let title: String?
+    let track: Int?
 }
 
 fileprivate let id3TagEditor = ID3TagEditor()
@@ -40,12 +40,12 @@ extension TagInfo {
 #endif
 
             let tagContentReader = ID3TagContentReader(id3Tag: id3Tag)
-            let title = tagContentReader.title()
-            let artist = tagContentReader.artist()
             let album = tagContentReader.album()
+            let artist = tagContentReader.artist()
+            let title = tagContentReader.title()
             let track = tagContentReader.trackPosition()?.position
 
-            return TagInfo(track: track, title: title, album: album, artist: artist)
+            return TagInfo(album: album, artist: artist, title: title, track: track)
         } catch {
             let errorMessage = error.localizedDescription
             print("Error reading ID3 tag from \(url.lastPathComponent): \(errorMessage)")
@@ -56,12 +56,12 @@ extension TagInfo {
 
 extension TagInfo: CustomStringConvertible {
     var description: String {
-        let title = self.title.flatMap { "Title: \($0)" }
         let album = self.album.flatMap { "Album: \($0)" }
         let artist = self.artist.flatMap { "Artist: \($0)" }
+        let title = self.title.flatMap { "Title: \($0)" }
         let track = self.track.flatMap { "Track: \($0)" }
 
-        let description = [title, album, artist, track].compactMap(\.self).joined(separator: "\n")
+        let description = [album, artist, title, track].compactMap(\.self).joined(separator: "\n")
 
         return description
     }

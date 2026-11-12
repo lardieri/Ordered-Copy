@@ -138,11 +138,11 @@ class DirectoryContents {
 
             func field(in file: MP3File, for criterion: MP3SortCriteria) -> any Comparable? {
                 return switch criterion {
-                    case .artist: file.tagInfo.artist
                     case .album: file.tagInfo.album
-                    case .track: file.tagInfo.track
+                    case .artist: file.tagInfo.artist
                     case .filename: file.name
                     case .title: file.tagInfo.title
+                    case .track: file.tagInfo.track
                 }
             }
         }
@@ -173,12 +173,12 @@ class DirectoryContents {
 }
 
 extension DirectoryContents {
-    enum MP3SortCriteria {
-        case artist
+    enum MP3SortCriteria: String, CaseIterable {
         case album
-        case track
+        case artist
         case filename
         case title
+        case track
     }
 }
 

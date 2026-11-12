@@ -19,6 +19,13 @@
         "up-to-next-major-version": "5.5.0",
       },
     },
+    {
+      "kind": "remote",
+      "repository": "https://github.com/apple/swift-argument-parser.git",
+      "version": {
+        "up-to-next-major-version": "1.5.0",
+      },
+    },
   ],
   "files": [
     { "kind": "folder", "path": "docs", "target-membership": [ "ocp" ] },
@@ -45,6 +52,11 @@
         {
           "package": "ID3TagEditor",
           "product-name": "ID3TagEditor",
+          "build-phase": { "build-phase": "frameworks" },
+        },
+        {
+          "package": "swift-argument-parser",
+          "product-name": "ArgumentParser",
           "build-phase": { "build-phase": "frameworks" },
         },
       ],

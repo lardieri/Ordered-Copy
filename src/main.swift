@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import ArgumentParser
 
-// TODO: Parse command-line parameters.
-fileprivate let singleThreaded = false
-fileprivate let recursive = true
-fileprivate let filter = FileOperations.Filter.default
-fileprivate let criteria = DirectoryContents.MP3SortCriteria.default
-fileprivate let sourcePath = "~/Music"
-fileprivate let destinationPath = "~/Music-copy"
+fileprivate let arguments = Arguments.parseOrExit()
+
+fileprivate let singleThreaded = arguments.singleThreaded
+fileprivate let recursive = arguments.recursive
+fileprivate let filter = arguments.filter
+fileprivate let criteria = arguments.sort
+fileprivate let sourcePath = arguments.sourceDirectory
+fileprivate let destinationPath = arguments.destinationDirectory
 
 fileprivate let sourceURL = URL(fileURLWithPath: sourcePath).adjusted
 fileprivate let destinationURL = URL(filePath: destinationPath, directoryHint: .isDirectory).adjusted
