@@ -23,9 +23,9 @@ checkFileSystem(for: destinationURL)
 
 fileprivate let fileOperations = FileOperations(recursive: recursive, singleThreaded: singleThreaded)
 
-fileprivate let startTime = ContinuousClock.now
-
 print("Scanning \(sourceURL.path(percentEncoded: false))")
+
+fileprivate let startTime = ContinuousClock.now
 
 // Apple developer forums say this is supposed to be faster for recursive scanning. It isn’t.
 //     fileprivate let directoryContents = fileOperations.enumerate(directory: sourceURL, filter: filter)
@@ -44,6 +44,8 @@ directoryContents.sort(criteria: criteria)
 print("Scanning duration: \(duration)")
 
 fileOperations.copyDirectory(directoryContents: directoryContents, to: destinationURL)
+
+exit(0)
 
 // MARK: - Helpers
 
