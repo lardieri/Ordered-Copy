@@ -20,24 +20,11 @@ fileprivate let id3TagEditor = ID3TagEditor()
 extension TagInfo {
     static func getTagInfo(for url: URL) -> TagInfo? {
         do {
-#if false // Pending PR submitted to upstream repo.
-
             // A failed read (file doesn't exist, is not an MP3, is a corrupt MP3) throws.
             // A successful read of a valid MP3 file that has no ID3 tag returns nil.
             guard let id3Tag = try id3TagEditor.read(from: url) else {
                 return nil
             }
-
-#else
-
-            // A failed read (file doesn't exist, is not an MP3, is a corrupt MP3) throws.
-            // A successful read of a valid MP3 file that has no ID3 tag returns nil.
-            let path = url.absoluteURL.path(percentEncoded: false)
-            guard let id3Tag = try id3TagEditor.read(from: path) else {
-                return nil
-            }
-
-#endif
 
             let tagContentReader = ID3TagContentReader(id3Tag: id3Tag)
             let album = tagContentReader.album()

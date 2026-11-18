@@ -16,7 +16,7 @@
       "kind": "remote",
       "repository": "https://github.com/chicio/ID3TagEditor.git",
       "version": {
-        "up-to-next-major-version": "5.5.0",
+        "up-to-next-major-version": "5.6.0",
       },
     },
     {
