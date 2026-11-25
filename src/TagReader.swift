@@ -27,9 +27,9 @@ extension TagInfo {
             }
 
             let tagContentReader = ID3TagContentReader(id3Tag: id3Tag)
-            let album = tagContentReader.album()
-            let artist = tagContentReader.artist()
-            let title = tagContentReader.title()
+            let album = tagContentReader.album()?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let artist = tagContentReader.artist()?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let title = tagContentReader.title()?.trimmingCharacters(in: .whitespacesAndNewlines)
             let track = tagContentReader.trackPosition()?.position
 
             return TagInfo(album: album, artist: artist, title: title, track: track)
